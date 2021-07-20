@@ -16,7 +16,7 @@ terraform.rc
 .terraformrc
 
 # lock 
-.terraform.lock.hcl 
+*.hcl 
 
 # my files
 ejercicios
