@@ -1,6 +1,6 @@
 terraform {
   backend "remote" {
-    organization = "NAME-training"
+    organization = "mariaromero-training"
 
     workspaces {
       name = "hashicat-aws"
