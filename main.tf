@@ -121,10 +121,7 @@ resource "aws_eip" "hashicat" {
 resource "aws_eip_association" "hashicat" {
   instance_id   = aws_instance.hashicat.id
   allocation_id = aws_eip.hashicat.id
-    tags = {
-    Department = "devops",
-    Billable = "true"
-  }
+
 }
 
 
@@ -137,7 +134,11 @@ resource "aws_instance" "hashicat" {
   vpc_security_group_ids      = [aws_security_group.hashicat.id]
 
   tags = {
-    Name = "${var.prefix}-hashicat-instance"
+    Name = "${var.prefix}-hashicat-instance",
+    Department = "devops",
+    Billable = "true"
+  
+  }
   }
 }
 
