@@ -1,0 +1,21 @@
+{
+    "data": {
+      "type":"vars",
+      "attributes": {
+        "key":"placeholder",
+        "value":"me, myself and I",
+        "category":"terraform",
+        "hcl":false,
+        "sensitive":false
+      },
+      "relationships": {
+        "workspace": {
+          "data": {
+            "id":"ws-SjtVwoZ3SBJDHZWg",
+            "type":"workspaces"
+          }
+        }
+      }
+    }
+  }
+  
