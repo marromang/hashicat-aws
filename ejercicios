@@ -182,3 +182,84 @@ The first VCS-backed apply should trigger immediately. Click on the Runs tab to 
 Congratulations, all Terraform changes must now go through version control before they are used in your workspace. This enables you to do code reviews before any changes are pushed to production. It also provides a valuable record of any and all changes made to the code that built your infrastructure. This can prevent configuration drift and undocumented changes.
 
 Click the Check button to let Jane know she can clone the hashicat-aws repo for QA testing.
+
+#################################################################3
+👬 Collaborating with VCS
+
+In this challenge you'll make a small change to the code that deploys the hashicat-aws application, and then create a "Pull Request", which is simply a way of proposing a change and optionally allowing others to review your changes.
+
+Find a partner, or if you're alone you can do this exercise solo. Exchange github usernames and browse to the other person's fork of the hashicat-aws repository. For example:
+
+https://github.com/YOURNAME/hashicat-aws
+
+Please do NOT issue your pull request against the hashicorp/hashicat-aws repository!
+
+Browse to the files/deploy_app.sh file and click on the small pencil icon in the upper right corner of the text area. This will allow you to edit the file right in your browser.
+
+Replace the following text with your own catchy marketing slogan for ACME.
+
+Welcome to ${PREFIX}'s app. Replace this text with your own.
+
+At the bottom of the screen, select the option that says "Create a new branch for this commit and start a pull request." Then, click the "Propose changes" button. Finally, submit a pull request by clicking the "Create pull request" button.
+
+You'll notice that a check is run against your Terraform Cloud workspace. If you right-click the "Details" link of the check and then open the link in a new tab, you'll see the speculative plan that has been run in your workspace.
+
+However, if you do open the link, you might need to refresh the GitHub page in order to see that the check has passed and so that the "Merge pull request" button will be enabled.
+
+Your partner should now review and approve the pull request. Or, if you're working alone you can review your own pull request and merge the changes.
+
+Once you've merged your changes to the master branch, watch the Terraform run that starts in the Terraform Cloud UI.
+
+###################################################3
+🛡️ Terraform Compliance with Sentinel
+
+In this challenge you'll use Sentinel to enforce a rule that requires any AWS instance created in your account to have the correct billable and department tags.
+Challenge Setup
+
+    Create a fork of the following GitHub repo, which contains several Sentinel Policy Sets that you can use in your own organization. As you did with the hashicat-aws repo, use the Fork button in the upper right corner of the screen to create your own copy.
+
+https://github.com/hashicorp/tfc-workshops-sentinel
+
+Note:: If you previously forked this repository before 9/20/2020, please delete your fork and re-fork it to ensure that you are using newer versions of the policies that use the Sentinel v2 imports.
+
+Before moving on, please look at the enforce-mandatory-tags policy. This policy requires all EC2 instances to have Department and Billable tags. It uses some functions from a Sentinel module in a different repository called terraform-guides. You'll find many useful Sentinel policies and functions in its governance/third-generation directory.
+
+    Go into the Organization Settings for your training organization and click on Policy Sets.
+
+    Use the Connect a new policy set button to connect your new GitHub repo to your organization. Remember, the repository is named tfc-workshops-sentinel.
+
+    Under Description you can enter "Sentinel Policies for our AWS resources".
+
+    In the More Options menu set the Policies Path to /aws. This tells Terraform Cloud to use the AWS specific policies that are stored in the repo.
+
+    Leave everything else at its default setting and click on the Connect Policy Set button at the bottom of the page.
+
+You are now ready to begin the challenge.
+The Challenge
+
+You'll first need to run a git pull command to pull in the changes you made in the "Collaborating with VCS" challenge:
+
+git pull
+
+Then, add the Department tag with a value of "devops" to the aws_instance resource in your main.tf file.
+
+Then run the following commands to push the change to your forked repository:
+
+git add .
+git commit -m "Added the first tag"
+git push origin master
+
+These commands mean "add all your changes, commit them to the local git repo, then push them to the master branch of the remote repo." Note that you will have to provide your GitHub credentinals for the git push command.
+
+A plan that successfully runs will be followed by a Sentinel policy check against the enforce-mandatory-tags.sentinel policy. This policy will fail because you have (intentionally) not yet added the Billable tag to your aws_instance resource. As a consequence, you will not be able to apply the run.
+
+Now, add the Billable tag to the aws_instance resource in your main.tf file with a value of "true" and then run these commands to push the change to your repository:
+
+git add .
+git commit -m "Added the second tag"
+git push origin master
+
+This time, the Sentinel policy should pass because your EC2 instance now has both tags.
+
+Each time you push a change to master, you'll trigger a new Terraform run. Keep trying until you pass the Sentinel policy check.
+
