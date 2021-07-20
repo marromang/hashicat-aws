@@ -126,7 +126,7 @@ resource "aws_eip_association" "hashicat" {
     Billable = "true"
   }
 }
-}
+
 
 resource "aws_instance" "hashicat" {
   ami                         = data.aws_ami.ubuntu.id
